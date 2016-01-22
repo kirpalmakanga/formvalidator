@@ -1,0 +1,26 @@
+{
+  "name": "formvalidator",
+  "homepage": "https://github.com/kirpalmakanga/formvalidator",
+  "authors": [
+    "Kirpal Makanga <makanga.kirpal@gmail.com>"
+  ],
+  "description": "Javascript plugin for form validation.",
+  "main": "js/formvalidator.js",
+  "moduleType": [
+    "es6",
+    "globals"
+  ],
+  "keywords": [
+    "javascript",
+    "form",
+    "validator"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}
