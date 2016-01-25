@@ -4,7 +4,7 @@
         defaults = {
             form: 'form',
             onValidation: null,
-            onResponse: null
+            onFormSent: null
         };
 
     function mergeObjects(defaults, options) {
@@ -18,11 +18,11 @@
         return settings;
     }
 
-    function callback(fn, data) {
+    function callback(fn, param1, param2) {
 
         if (typeof fn === 'function') {
 
-            fn(data);
+            fn(param1, param2);
 
         } else if (fn !== null && typeof fn !== 'function') {
 
@@ -101,7 +101,7 @@
             xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
-                    callback(options.onResponse, xhr.responseText);
+                    callback(options.onFormSent, form, xhr.responseText);
                     busy = false;
                 }
             };
