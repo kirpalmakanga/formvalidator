@@ -13,7 +13,7 @@ validateForm.init({
   onValidation: function(inputData) {
 
     /*
-        inputData.element -> the current input element
+        inputData.input -> the current input element
         inputData.error -> the input's status (boolean)
     */
 
