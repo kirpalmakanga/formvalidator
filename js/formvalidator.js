@@ -98,7 +98,6 @@
             busy = true;
 
             xhr.open('POST', action, true);
-            xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded; charset=UTF-8');
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === XMLHttpRequest.DONE) {
                     callback(options.onFormSent, form, xhr.responseText);
