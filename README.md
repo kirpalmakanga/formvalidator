@@ -9,7 +9,7 @@ Javascript plugin for form validation.
 validateForm.init({
   form: '.form',
   
-  ajax: false, //disable ajax sending (default is true)
+  ajax: true, //enable ajax sending (default is false)
 
   //Triggered after each input validation
   onValidation: function(inputData) {
