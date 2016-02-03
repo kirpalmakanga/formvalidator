@@ -3,6 +3,7 @@
     var busy = null,
         defaults = {
             form: 'form',
+            ajax: true,
             onValidation: null,
             onFormSent: null
         };
@@ -73,11 +74,13 @@
         submit.addEventListener('click', function(e) {
             var errors = validate(inputs, options);
 
-            if (!errors) {
+            if(options.ajax && !errors) {
                 send(options);
             }
 
-            e.preventDefault();
+            if(options.ajax || !options.ajax && errors) {
+                e.preventDefault();               
+            }
         });
 
         [].map.call(inputs, function(input) {
