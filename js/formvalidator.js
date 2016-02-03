@@ -3,7 +3,7 @@
     var busy = null,
         defaults = {
             form: 'form',
-            ajax: true,
+            ajax: false,
             onValidation: null,
             onFormSent: null
         };
