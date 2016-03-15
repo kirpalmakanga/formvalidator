@@ -1,4 +1,4 @@
-(function(plugin) {
+(function(document) {
     //Methods
     var busy = null,
         defaults = {
@@ -114,7 +114,7 @@
         }
     }
 
-    plugin.init = function(options) {
+    document.formValidator = function(options) {
 
         var settings = mergeObjects(defaults, options);
 
@@ -126,4 +126,4 @@
 
     };
 
-})(this.validateForm = this.validateForm || {});
+})(document);
