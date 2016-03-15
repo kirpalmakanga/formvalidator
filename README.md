@@ -6,7 +6,7 @@ Javascript plugin for form validation.
 
 ## Init
 ``` js
-validateForm.init({
+document.formValidator({
   form: '.form',
   
   ajax: true, //enable ajax sending (default is false)
