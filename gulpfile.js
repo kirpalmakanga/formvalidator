@@ -30,11 +30,7 @@ gulp.task('lint', () => {
 });
 
 gulp.task('babel', () => {
-  return gulp.src([
-      'bower_components/fetch/fetch.js',
-      'js/*.js'
-    ])
-    .pipe($.concat('formvalidator.js'))
+  return gulp.src('js/*.js')
     .pipe(strip())
     .pipe($.babel({
       presets: ['es2015']

@@ -24,6 +24,7 @@
     </form>
 
   </body>
+  <script type="text/javascript" src="bower_components/fetch/fetch.js"></script>
   <script type="text/javascript" src="dist/formvalidator.js"></script>
   <script type="text/javascript" src="demo/main.js"></script>
 </html>
