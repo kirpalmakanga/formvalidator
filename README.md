@@ -8,7 +8,7 @@ Javascript plugin for form validation.
 ``` js
 document.formValidator({
   form: '.form',
-  
+
   ajax: true, //enable ajax sending (default is false)
 
   //Triggered after each input validation
@@ -22,8 +22,13 @@ document.formValidator({
   },
 
   //Triggered after the form data have been sent
-  onFormSent: function(form, response) {
+  onFormSent: function(data) {
 
+    /*
+        data.input -> the current form
+        data.response -> the server's response
+    */
+    
   }
 });
 ```
