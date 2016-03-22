@@ -36,7 +36,7 @@
     try {
       fn(parameters);
     } catch (error) {
-      console.error('AjaxLoader: Provided callback is not a function.');
+      console.error('formValidator: Provided callback is not a function.');
     }
   }
 
@@ -49,8 +49,6 @@
       method: 'POST',
       body: data
     });
-
-    console.log(data);
 
     fetch(request)
       .then(response => response.text())

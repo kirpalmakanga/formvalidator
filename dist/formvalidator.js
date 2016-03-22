@@ -39,7 +39,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     try {
       fn(parameters);
     } catch (error) {
-      console.error('AjaxLoader: Provided callback is not a function.');
+      console.error('formValidator: Provided callback is not a function.');
     }
   }
 
@@ -52,8 +52,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       method: 'POST',
       body: data
     });
-
-    console.log(data);
 
     fetch(request).then(function (response) {
       return response.text();
