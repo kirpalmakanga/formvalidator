@@ -1,0 +1,79 @@
+html {
+  height: 100%;
+}
+body {
+  height: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+.form {
+  padding: 20px;
+  background-color: #2196F3;
+}
+.form .form-group {
+  margin-bottom: 20px;
+}
+.form .form-group.has-error input {
+  background-color: #E53935;
+}
+.form .form-group:last-child {
+  margin-bottom: 0;
+}
+.form .form-group input {
+  -webkit-transition: all 0.5s ease-out;
+  transition: all 0.5s ease-out;
+  border: none;
+  padding: 10px 12px;
+}
+.form .form-group .form-submit {
+  -webkit-transition: background-color 0.5s ease-out;
+  transition: background-color 0.5s ease-out;
+  background-color: #0960a5;
+  border: none;
+  padding: 10px 12px;
+  color: #FAFAFA;
+  text-transform: uppercase;
+  font-weight: bold;
+  cursor: pointer;
+}
+.form .form-group .form-submit:hover {
+  background-color: #0c7cd5;
+}
+.form .form-group .form-submit:active {
+  background-color: #0960a5;
+}
+.alert {
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 15px;
+  transition: all 0.5s ease-out;
+  transform: translateY(100%);
+}
+.alert.toggle {
+  transform: translateY(0);
+}
+.alert p {
+  margin-bottom: 10px;
+}
+.alert p:last-of-type {
+  margin: 0;
+}
+.alert-warning {
+  background-color: #2196F3;
+}
+.alert-success {
+  background-color: #4CAF50;
+}

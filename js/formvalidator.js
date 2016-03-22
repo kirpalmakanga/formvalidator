@@ -1,129 +1,99 @@
+/*jshint esversion: 6*/
+/*eslint-env es6*/
 (function(document) {
-    //Methods
-    var busy = null,
-        defaults = {
-            form: 'form',
-            ajax: false,
-            onValidation: null,
-            onFormSent: null
-        };
-
-    function mergeObjects(defaults, options) {
-        var settings = {};
-        for (var defaultName in defaults) {
-            settings[defaultName] = defaults[defaultName];
-        }
-        for (var optionName in options) {
-            settings[optionName] = options[optionName];
-        }
-        return settings;
-    }
-
-    function callback(fn, param1, param2) {
-
-        if (typeof fn === 'function') {
-
-            fn(param1, param2);
-
-        } else if (fn !== null && typeof fn !== 'function') {
-
-            console.log('The provided callback is not a function.');
-
-        }
-
-    }
-
-    function validate(inputs, options) {
-        var errors = false;
-
-        function checkInput(input) {
-            var error = false,
-                value = input.value.trim();
-
-            if (value === '' || value === '0') {
-
-                error = true;
-
-            }
-
-            callback(options.onValidation, {
-                input: input,
-                error: error
-            });
-
-            return error;
-        }
-
-        //Test if one or more inputs
-        if (inputs.nodeType) {
-            errors = checkInput(inputs);
-        } else {
-            [].map.call(inputs, function(input) {
-                errors = checkInput(input);
-            });
-        }
-
-        return errors;
-    }
-
-    function setListeners(options) {
-        var form = document.querySelector(options.form),
-            submit = form.querySelector('[type="submit"]'),
-            inputs = form.querySelectorAll('[required]');
-
-        submit.addEventListener('click', function(e) {
-            var errors = validate(inputs, options);
-
-            if(options.ajax && !errors) {
-                send(options);
-            }
-
-            if(options.ajax || !options.ajax && errors) {
-                e.preventDefault();               
-            }
-        });
-
-        [].map.call(inputs, function(input) {
-
-            input.addEventListener('keyup', function() {
-                validate(input, options);
-            });
-        });
-    }
-
-    function send(options) {
-        var form = document.querySelector(options.form),
-            action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action'),
-            data = new FormData(form),
-            xhr = new XMLHttpRequest();
-
-        if (!busy) {
-            busy = true;
-
-            xhr.open('POST', action, true);
-            xhr.onreadystatechange = function() {
-                if (xhr.readyState === XMLHttpRequest.DONE) {
-                    callback(options.onFormSent, form, xhr.responseText);
-                    busy = false;
-                }
-            };
-
-            xhr.send(data);
-        } else {
-            console.log('busy');
-        }
-    }
-
-    document.formValidator = function(options) {
-
-        var settings = mergeObjects(defaults, options);
-
-        if (options && typeof options === 'object') {
-            setListeners(settings);
-        } else {
-            console.error('ajaxForm: argument must be an object');
-        }
-
+  'use strict';
+  const createSettings = (options) => {
+    const defaults = {
+      form: 'form',
+      ajax: false,
+      onValidation: null,
+      onFormSent: null
     };
+
+    let settings = defaults;
+
+    for (let option in options) settings[option] = options[option];
+
+    return settings;
+  };
+
+  const validate = (input, settings) => {
+    const value = input.value.trim();
+    const error = (value === '' || value === '0' ? 1 : 0);
+
+    callback(settings.onValidation, {
+      form: document.querySelector(settings.form),
+      input: input,
+      error: error
+    });
+
+    return error;
+  };
+
+  function callback(fn, parameters) {
+    if (fn === null) return;
+
+    try {
+      fn(parameters);
+    } catch (error) {
+      console.error('AjaxLoader: Provided callback is not a function.');
+    }
+  }
+
+  function send(settings) {
+    const form = document.querySelector(settings.form);
+    const action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
+    const data = new FormData(form);
+
+    const request = new Request(action, {
+      method: 'POST',
+      body: data
+    });
+
+    console.log(data);
+
+    fetch(request)
+      .then(response => response.text())
+      .then(response => {
+        callback(settings.onFormSent, {
+          form: form,
+          response: response
+        });
+      })
+      .catch(error => {
+        callback(settings.onError, error);
+      });
+  }
+
+  function setListeners(settings) {
+    const form = document.querySelector(settings.form);
+    const submit = form.querySelector('[type="submit"]');
+    const inputs = [].slice.call(form.querySelectorAll('[required]'));
+
+    if (inputs.length > 1) {
+      inputs.forEach(input => {
+        input.addEventListener('keyup', () => validate(input, settings));
+      });
+    } else {
+      inputs[0].addEventListener('keyup', () => validate(inputs, settings));
+    }
+
+    submit.addEventListener('click', e => {
+      const errors = inputs.reduce((sum, input) => sum + validate(input, settings), 0);
+
+      if (settings.ajax && !errors) {
+        send(settings);
+      }
+
+      if (settings.ajax || !settings.ajax && errors) {
+        e.preventDefault();
+      }
+    });
+  }
+
+  document.formValidator = options => {
+    const settings = createSettings(options && typeof options === 'object' ? options : {});
+    setListeners(settings);
+  };
 
 })(document);
