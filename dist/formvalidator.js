@@ -39,7 +39,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     try {
       fn(parameters);
     } catch (error) {
-      console.error('formValidator: Provided callback is not a function.');
+      console.error(error);
     }
   }
 
