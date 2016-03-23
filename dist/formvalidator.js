@@ -72,12 +72,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
     if (inputs.length > 1) {
       inputs.forEach(function (input) {
-        input.addEventListener('keyup', function () {
+        input.addEventListener('keyup change blur', function () {
           return validate(input, settings);
         });
       });
     } else {
-      inputs[0].addEventListener('keyup', function () {
+      inputs[0].addEventListener('keyup change blur', function () {
         return validate(inputs, settings);
       });
     }

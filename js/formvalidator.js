@@ -70,10 +70,10 @@
 
     if (inputs.length > 1) {
       inputs.forEach(input => {
-        input.addEventListener('keyup', () => validate(input, settings));
+        input.addEventListener('keyup change blur', () => validate(input, settings));
       });
     } else {
-      inputs[0].addEventListener('keyup', () => validate(inputs, settings));
+      inputs[0].addEventListener('keyup change blur', () => validate(inputs, settings));
     }
 
     submit.addEventListener('click', e => {
