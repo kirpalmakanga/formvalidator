@@ -5,19 +5,22 @@ Javascript plugin for form validation.
 `bower i formvalidator --save`
 
 ## Init
-``` js
+
+```js
 document.formValidator({
   form: '.form',
 
   ajax: true, //enable ajax sending (default is false)
 
   //Triggered before sending form
-  beforeSending: new Promise(function(send, reject) {
-    /*
-      send() -> no arguments, just sends the form
-      reject(error) -> displays an error
-    */
-  }),
+  beforeSending:function(form) {
+    return new Promise(function(send, reject) {
+      /*
+        send() -> no arguments, just sends the form
+        reject(error) -> displays an error
+      */
+    });
+  },
 
   //Triggered after each input validation
   onValidation: function(inputData) {

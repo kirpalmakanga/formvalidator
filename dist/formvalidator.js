@@ -34,21 +34,27 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     return error;
   };
 
-  function callback(fn, parameters) {
+  function callback(fn, parameters, instead) {
+    var result = null;
+
+    if (fn === null && instead) instead();
+
     if (fn === null) return;
 
     try {
-      fn(parameters);
+      result = fn(parameters);
     } catch (error) {
       console.error(error);
+    } finally {
+      return result;
     }
   }
 
   function send(settings) {
+    var form = document.querySelector(settings.form);
     var beforeSending = settings.beforeSending;
 
     function postData() {
-      var form = document.querySelector(settings.form);
       var action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
       var request = new Request(action, {
         method: 'POST',
@@ -67,15 +73,13 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       });
     }
 
-    if (beforeSending === null) {
-      postData();
-    } else {
-      beforeSending.then(function () {
-        return postData();
-      }).catch(function (error) {
-        return console.error(error);
-      });
-    }
+    callback(settings.beforeSending, form, function () {
+      return postData();
+    }).then(function () {
+      return postData();
+    }).catch(function (error) {
+      return console.error(error);
+    });
   }
 
   function setListeners(settings) {

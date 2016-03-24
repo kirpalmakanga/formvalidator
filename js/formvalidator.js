@@ -31,21 +31,27 @@
     return error;
   };
 
-  function callback(fn, parameters) {
+  function callback(fn, parameters, instead) {
+    let result = null;
+
+    if (fn === null && instead) instead();
+
     if (fn === null) return;
 
     try {
-      fn(parameters);
+      result = fn(parameters);
     } catch (error) {
       console.error(error);
+    } finally {
+      return result;
     }
   }
 
   function send(settings) {
+    const form = document.querySelector(settings.form);
     const beforeSending = settings.beforeSending;
 
     function postData() {
-      const form = document.querySelector(settings.form);
       const action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
       const request = new Request(action, {
         method: 'POST',
@@ -65,14 +71,9 @@
         });
     }
 
-    if (beforeSending === null) {
-      postData();
-    } else {
-      beforeSending
-        .then(() => postData())
-        .catch(error => console.error(error));
-    }
-
+    callback(settings.beforeSending, form, () => postData())
+      .then(() => postData())
+      .catch(error => console.error(error));
   }
 
   function setListeners(settings) {
