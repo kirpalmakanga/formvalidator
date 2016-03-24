@@ -52,7 +52,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
   function send(settings) {
     var form = document.querySelector(settings.form);
-    var beforeSending = settings.beforeSending;
+    var prom = void 0;
 
     function postData() {
       var action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
@@ -72,14 +72,19 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         callback(settings.onError, error);
       });
     }
-
-    callback(settings.beforeSending, form, function () {
+    prom = callback(settings.beforeSending, form, function () {
       return postData();
-    }).then(function () {
-      return postData();
-    }).catch(function (error) {
-      return console.error(error);
     });
+
+    if (prom && typeof prom.then === 'function') {
+      prom.then(function () {
+        return postData();
+      }).catch(function (error) {
+        return console.error(error);
+      });
+    } else {
+      console.log('no promise, I\'m out !');
+    }
   }
 
   function setListeners(settings) {

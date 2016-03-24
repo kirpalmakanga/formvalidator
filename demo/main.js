@@ -27,15 +27,7 @@
         notify('error', 'Veuillez renseigner tous les champs.', inputData.form);
       }
     },
-    beforeSending: function(form) {
-      return new Promise(function(send, reject) {
-        try {
-          send();
-        } catch (error) {
-          reject(error);
-        }
-      });
-    },
+
     //Triggered after the form data have been sent
     onFormSent: function(data) {
       console.log(data.response);

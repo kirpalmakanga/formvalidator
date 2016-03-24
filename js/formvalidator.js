@@ -49,7 +49,7 @@
 
   function send(settings) {
     const form = document.querySelector(settings.form);
-    const beforeSending = settings.beforeSending;
+    let prom;
 
     function postData() {
       const action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
@@ -70,10 +70,17 @@
           callback(settings.onError, error);
         });
     }
+    prom = callback(settings.beforeSending, form, () => postData());
 
-    callback(settings.beforeSending, form, () => postData())
-      .then(() => postData())
-      .catch(error => console.error(error));
+    if(prom && typeof prom.then === 'function') {
+      prom
+        .then(() => postData())
+        .catch(error => console.error(error));
+    }
+    else {
+      console.log('no promise, I\'m out !');
+    }
+
   }
 
   function setListeners(settings) {
