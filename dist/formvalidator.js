@@ -114,7 +114,9 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       if (settings.ajax) {
         send(settings);
       } else {
-        callback(settings.beforeSending, form);
+        callback(settings.beforeSending, form, function () {
+          return form.submit();
+        });
       }
     });
   }

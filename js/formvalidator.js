@@ -102,7 +102,7 @@
       if(settings.ajax) {
         send(settings);
       } else {
-        callback(settings.beforeSending, form);
+        callback(settings.beforeSending, form, () => form.submit());
       }
     });
   }
