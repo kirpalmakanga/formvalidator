@@ -43,7 +43,7 @@
     } catch (error) {
       console.error(error);
     } finally {
-      if(prom && typeof prom.then === 'function') {
+      if (prom && typeof prom.then === 'function') {
         prom
           .then(() => after())
           .catch(error => console.error(error));
@@ -79,25 +79,43 @@
     const form = document.querySelector(settings.form);
     const submit = form.querySelector('[type="submit"]');
     const inputs = [].slice.call(form.querySelectorAll('[required]'));
+    const inputEvents = element => {
+      let string = 'blur ';
+      switch (element.type) {
+        case 'checkbox':
+        case 'radio':
+        case 'select-one':
+        case 'select-multiple':
+          string += 'change';
+          break;
+        default:
+          string += 'keyup';
+      }
+      return string;
+    };
+
+    function addEventListeners(element, events, handler) {
+      events.split(' ').forEach(e => element.addEventListener(e, handler));
+    }
 
     if (inputs.length > 1) {
       inputs.forEach(input => {
-        input.addEventListener('keyup change blur', () => validate(input, settings));
+        addEventListeners(input, inputEvents(input), () => validate(input, settings));
       });
     } else {
-      inputs[0].addEventListener('keyup change blur', () => validate(inputs, settings));
+      addEventListeners(inputs[0], inputEvents(input), () => validate(inputs, settings));
     }
 
     submit.addEventListener('click', e => {
       const errors = inputs.reduce((sum, input) => sum + validate(input, settings), 0);
 
-      if(errors) {
+      e.preventDefault();
+
+      if (errors) {
         return false;
       }
 
-      e.preventDefault();
-
-      if(settings.ajax) {
+      if (settings.ajax) {
         send(settings);
       } else {
         callback(settings.beforeSending, form, () => form.submit());

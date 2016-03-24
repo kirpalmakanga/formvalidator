@@ -83,15 +83,35 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var form = document.querySelector(settings.form);
     var submit = form.querySelector('[type="submit"]');
     var inputs = [].slice.call(form.querySelectorAll('[required]'));
+    var inputEvents = function inputEvents(element) {
+      var string = 'blur ';
+      switch (element.type) {
+        case 'checkbox':
+        case 'radio':
+        case 'select-one':
+        case 'select-multiple':
+          string += 'change';
+          break;
+        default:
+          string += 'keyup';
+      }
+      return string;
+    };
+
+    function addEventListeners(element, events, handler) {
+      events.split(' ').forEach(function (e) {
+        return element.addEventListener(e, handler);
+      });
+    }
 
     if (inputs.length > 1) {
       inputs.forEach(function (input) {
-        input.addEventListener('keyup change blur', function () {
+        addEventListeners(input, inputEvents(input), function () {
           return validate(input, settings);
         });
       });
     } else {
-      inputs[0].addEventListener('keyup change blur', function () {
+      addEventListeners(inputs[0], inputEvents(input), function () {
         return validate(inputs, settings);
       });
     }
@@ -101,11 +121,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return sum + validate(input, settings);
       }, 0);
 
+      e.preventDefault();
+
       if (errors) {
         return false;
       }
-
-      e.preventDefault();
 
       if (settings.ajax) {
         send(settings);

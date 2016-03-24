@@ -35,6 +35,9 @@ body {
   border: none;
   padding: 10px 12px;
 }
+.form .form-group.error {
+  border: 2px solid black;
+}
 .form .form-group .form-submit {
   -webkit-transition: background-color 0.5s ease-out;
   transition: background-color 0.5s ease-out;
