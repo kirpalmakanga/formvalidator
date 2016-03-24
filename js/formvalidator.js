@@ -95,9 +95,10 @@
       const errors = inputs.reduce((sum, input) => sum + validate(input, settings), 0);
 
       if(errors) {
-        e.preventDefault();
         return false;
       }
+
+      e.preventDefault();
 
       if(settings.ajax) {
         send(settings);

@@ -3,7 +3,7 @@
   <link rel="stylesheet" href="demo/main.css">
 </head>
   <body>
-    <form class="form" data-form-action="response.php" action="#">
+    <form class="form" method="POST" data-form-action="response.php" action="response.php">
 
       <div class="form-group">
         <input name="name" type="text" required/>

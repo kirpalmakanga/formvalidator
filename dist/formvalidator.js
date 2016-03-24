@@ -107,9 +107,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       }, 0);
 
       if (errors) {
-        e.preventDefault();
         return false;
       }
+
+      e.preventDefault();
 
       if (settings.ajax) {
         send(settings);
