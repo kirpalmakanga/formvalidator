@@ -7,6 +7,7 @@
       form: 'form',
       ajax: false,
       onValidation: null,
+      beforeSending: null,
       onFormSent: null
     };
 
@@ -41,26 +42,37 @@
   }
 
   function send(settings) {
-    const form = document.querySelector(settings.form);
-    const action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
-    const data = new FormData(form);
+    const beforeSending = settings.beforeSending;
 
-    const request = new Request(action, {
-      method: 'POST',
-      body: data
-    });
-
-    fetch(request)
-      .then(response => response.text())
-      .then(response => {
-        callback(settings.onFormSent, {
-          form: form,
-          response: response
-        });
-      })
-      .catch(error => {
-        callback(settings.onError, error);
+    function postData() {
+      const form = document.querySelector(settings.form);
+      const action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
+      const request = new Request(action, {
+        method: 'POST',
+        body: new FormData(form)
       });
+
+      fetch(request)
+        .then(response => response.text())
+        .then(response => {
+          callback(settings.onFormSent, {
+            form: form,
+            response: response
+          });
+        })
+        .catch(error => {
+          callback(settings.onError, error);
+        });
+    }
+
+    if (beforeSending === null) {
+      postData();
+    } else {
+      beforeSending
+        .then(() => postData())
+        .catch(error => console.error(error));
+    }
+
   }
 
   function setListeners(settings) {

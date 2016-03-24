@@ -10,6 +10,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       form: 'form',
       ajax: false,
       onValidation: null,
+      beforeSending: null,
       onFormSent: null
     };
 
@@ -44,25 +45,37 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }
 
   function send(settings) {
-    var form = document.querySelector(settings.form);
-    var action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
-    var data = new FormData(form);
+    var beforeSending = settings.beforeSending;
 
-    var request = new Request(action, {
-      method: 'POST',
-      body: data
-    });
-
-    fetch(request).then(function (response) {
-      return response.text();
-    }).then(function (response) {
-      callback(settings.onFormSent, {
-        form: form,
-        response: response
+    function postData() {
+      var form = document.querySelector(settings.form);
+      var action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
+      var request = new Request(action, {
+        method: 'POST',
+        body: new FormData(form)
       });
-    }).catch(function (error) {
-      callback(settings.onError, error);
-    });
+
+      fetch(request).then(function (response) {
+        return response.text();
+      }).then(function (response) {
+        callback(settings.onFormSent, {
+          form: form,
+          response: response
+        });
+      }).catch(function (error) {
+        callback(settings.onError, error);
+      });
+    }
+
+    if (beforeSending === null) {
+      postData();
+    } else {
+      beforeSending.then(function () {
+        return postData();
+      }).catch(function (error) {
+        return console.error(error);
+      });
+    }
   }
 
   function setListeners(settings) {
