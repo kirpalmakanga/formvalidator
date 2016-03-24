@@ -11,6 +11,14 @@ document.formValidator({
 
   ajax: true, //enable ajax sending (default is false)
 
+  //Triggered before sending form
+  beforeSending: new Promise(function(send, reject) {
+    /*
+      send() -> no arguments, just sends the form
+      reject(error) -> displays an error
+    */
+  }),
+
   //Triggered after each input validation
   onValidation: function(inputData) {
 
@@ -28,7 +36,7 @@ document.formValidator({
         data.input -> the current form
         data.response -> the server's response
     */
-    
+
   }
 });
 ```
