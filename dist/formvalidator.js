@@ -58,9 +58,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
   function send(settings) {
     var form = document.querySelector(settings.form);
-    var prom = void 0;
 
-    function postData() {
+    callback(settings.beforeSending, form, function () {
       var action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
       var request = new Request(action, {
         method: 'POST',
@@ -77,10 +76,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       }).catch(function (error) {
         callback(settings.onError, error);
       });
-    }
-
-    callback(settings.beforeSending, form, function () {
-      return postData();
     });
   }
 

@@ -53,9 +53,8 @@
 
   function send(settings) {
     const form = document.querySelector(settings.form);
-    let prom;
 
-    function postData() {
+    callback(settings.beforeSending, form, () => {
       const action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
       const request = new Request(action, {
         method: 'POST',
@@ -73,9 +72,7 @@
         .catch(error => {
           callback(settings.onError, error);
         });
-    }
-
-    callback(settings.beforeSending, form, () => postData());
+    });
   }
 
   function setListeners(settings) {

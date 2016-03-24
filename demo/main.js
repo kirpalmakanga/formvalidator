@@ -28,15 +28,15 @@
       }
     },
 
-    // beforeSending: function(form) {
-    //   return new Promise(function(send, reject) {
-    //     try {
-    //       send();
-    //     } catch(error) {
-    //       console.error('error');
-    //     }
-    //   });
-    // },
+    beforeSending: function(form) {
+      return new Promise(function(send, reject) {
+        try {
+          send();
+        } catch(error) {
+          console.error('error');
+        }
+      });
+    },
 
     //Triggered after the form data have been sent
     onFormSent: function(data) {
