@@ -22,7 +22,7 @@
     //ajax: true, //enable ajax sending (default is false)
     //Triggered after each input validation
     onValidation: function(inputData) {
-      inputData.input.classList.toggle('error', inputData.error);
+      inputData.input.parentNode.classList.toggle('error', inputData.error);
       if (inputData.error) {
         notify('error', 'Veuillez renseigner tous les champs.', inputData.form);
       }
