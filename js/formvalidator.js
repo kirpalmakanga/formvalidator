@@ -77,9 +77,6 @@
         .then(() => postData())
         .catch(error => console.error(error));
     }
-    else {
-      console.log('no promise, I\'m out !');
-    }
 
   }
 

@@ -82,8 +82,6 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       }).catch(function (error) {
         return console.error(error);
       });
-    } else {
-      console.log('no promise, I\'m out !');
     }
   }
 
