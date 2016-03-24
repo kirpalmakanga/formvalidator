@@ -34,19 +34,25 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     return error;
   };
 
-  function callback(fn, parameters, instead) {
-    var result = null;
+  function callback(fn, parameters, after) {
+    var prom = null;
 
-    if (fn === null && instead) instead();
+    if (fn === null && after) after();
 
     if (fn === null) return;
 
     try {
-      result = fn(parameters);
+      prom = fn(parameters);
     } catch (error) {
       console.error(error);
     } finally {
-      return result;
+      if (prom && typeof prom.then === 'function') {
+        prom.then(function () {
+          return after();
+        }).catch(function (error) {
+          return console.error(error);
+        });
+      }
     }
   }
 
@@ -72,17 +78,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         callback(settings.onError, error);
       });
     }
-    prom = callback(settings.beforeSending, form, function () {
+
+    callback(settings.beforeSending, form, function () {
       return postData();
     });
-
-    if (prom && typeof prom.then === 'function') {
-      prom.then(function () {
-        return postData();
-      }).catch(function (error) {
-        return console.error(error);
-      });
-    }
   }
 
   function setListeners(settings) {
@@ -107,12 +106,15 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         return sum + validate(input, settings);
       }, 0);
 
-      if (settings.ajax && !errors) {
-        send(settings);
+      if (errors) {
+        e.preventDefault();
+        return false;
       }
 
-      if (settings.ajax || !settings.ajax && errors) {
-        e.preventDefault();
+      if (settings.ajax) {
+        send(settings);
+      } else {
+        callback(settings.beforeSending, form);
       }
     });
   }

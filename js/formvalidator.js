@@ -31,19 +31,23 @@
     return error;
   };
 
-  function callback(fn, parameters, instead) {
-    let result = null;
+  function callback(fn, parameters, after) {
+    let prom = null;
 
-    if (fn === null && instead) instead();
+    if (fn === null && after) after();
 
     if (fn === null) return;
 
     try {
-      result = fn(parameters);
+      prom = fn(parameters);
     } catch (error) {
       console.error(error);
     } finally {
-      return result;
+      if(prom && typeof prom.then === 'function') {
+        prom
+          .then(() => after())
+          .catch(error => console.error(error));
+      }
     }
   }
 
@@ -70,14 +74,8 @@
           callback(settings.onError, error);
         });
     }
-    prom = callback(settings.beforeSending, form, () => postData());
 
-    if(prom && typeof prom.then === 'function') {
-      prom
-        .then(() => postData())
-        .catch(error => console.error(error));
-    }
-
+    callback(settings.beforeSending, form, () => postData());
   }
 
   function setListeners(settings) {
@@ -96,12 +94,15 @@
     submit.addEventListener('click', e => {
       const errors = inputs.reduce((sum, input) => sum + validate(input, settings), 0);
 
-      if (settings.ajax && !errors) {
-        send(settings);
+      if(errors) {
+        e.preventDefault();
+        return false;
       }
 
-      if (settings.ajax || !settings.ajax && errors) {
-        e.preventDefault();
+      if(settings.ajax) {
+        send(settings);
+      } else {
+        callback(settings.beforeSending, form);
       }
     });
   }
