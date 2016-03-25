@@ -111,8 +111,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         });
       });
     } else {
-      addEventListeners(inputs[0], inputEvents(input), function () {
-        return validate(inputs, settings);
+      addEventListeners(inputs[0], inputEvents(inputs[0]), function () {
+        return validate(inputs[0], settings);
       });
     }
 

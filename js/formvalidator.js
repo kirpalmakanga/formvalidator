@@ -103,7 +103,7 @@
         addEventListeners(input, inputEvents(input), () => validate(input, settings));
       });
     } else {
-      addEventListeners(inputs[0], inputEvents(input), () => validate(inputs, settings));
+      addEventListeners(inputs[0], inputEvents(inputs[0]), () => validate(inputs[0], settings));
     }
 
     submit.addEventListener('click', e => {
