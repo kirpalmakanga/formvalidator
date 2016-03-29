@@ -19,7 +19,7 @@
 
   document.formValidator({
     form: '.form',
-    //ajax: true, //enable ajax sending (default is false)
+    ajax: true, //enable ajax sending (default is false)
     //Triggered after each input validation
     onValidation: function(inputData) {
       inputData.input.parentNode.classList.toggle('error', inputData.error);
@@ -28,15 +28,15 @@
       }
     },
 
-    beforeSending: function(form) {
-      return new Promise(function(send, reject) {
-        try {
-          send();
-        } catch(error) {
-          console.error('error');
-        }
-      });
-    },
+    // beforeSending: function(form) {
+    //   return new Promise(function(send, reject) {
+    //     try {
+    //       send();
+    //     } catch(error) {
+    //       console.error('error');
+    //     }
+    //   });
+    // },
 
     //Triggered after the form data have been sent
     onFormSent: function(data) {

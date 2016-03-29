@@ -63,7 +63,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       var action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
       var request = new Request(action, {
         method: 'POST',
-        body: new FormData(form)
+        body: new FormData(form),
+        mode: 'no-cors'
       });
 
       fetch(request).then(function (response) {
