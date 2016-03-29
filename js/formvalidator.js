@@ -6,6 +6,7 @@
     const defaults = {
       form: 'form',
       ajax: false,
+      cors: false,
       onValidation: null,
       beforeSending: null,
       onFormSent: null
@@ -51,15 +52,14 @@
     }
   }
 
-  function send(settings) {
-    const form = document.querySelector(settings.form);
+  function send(form, settings) {
 
     callback(settings.beforeSending, form, () => {
       const action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
       const request = new Request(action, {
         method: 'POST',
         body: new FormData(form),
-        mode: 'no-cors'
+        mode: settings.cors ? 'cors' : 'no-cors'
       });
 
       fetch(request)
@@ -76,9 +76,9 @@
     });
   }
 
-  function setListeners(settings) {
-    const form = document.querySelector(settings.form);
+  function setListeners(form, settings) {
     const submit = form.querySelector('[type="submit"]');
+    const submitFunc = settings.ajax ? () => send(form, settings) : () => form.submit();
     const inputs = [].slice.call(form.querySelectorAll('[required]'));
     const inputEvents = element => {
       let string = 'blur ';
@@ -99,34 +99,28 @@
       events.split(' ').forEach(e => element.addEventListener(e, handler));
     }
 
-    if (inputs.length > 1) {
-      inputs.forEach(input => {
-        addEventListeners(input, inputEvents(input), () => validate(input, settings));
-      });
-    } else {
+    if (inputs.length > 1)
+      inputs.forEach(input => addEventListeners(input, inputEvents(input), () => validate(input, settings)));
+    else
       addEventListeners(inputs[0], inputEvents(inputs[0]), () => validate(inputs[0], settings));
-    }
 
     submit.addEventListener('click', e => {
       const errors = inputs.reduce((sum, input) => sum + validate(input, settings), 0);
 
       e.preventDefault();
 
-      if (errors) {
-        return false;
-      }
-
-      if (settings.ajax) {
-        send(settings);
-      } else {
-        callback(settings.beforeSending, form, () => form.submit());
-      }
+      if (!errors) callback(settings.beforeSending, form, submitFunc);
     });
   }
 
   document.formValidator = options => {
     const settings = createSettings(options && typeof options === 'object' ? options : {});
-    setListeners(settings);
+    const forms = [].slice.call(document.querySelectorAll(settings.form));
+
+    if(forms.length > 1)
+      forms.forEach(form => setListeners(form, settings));
+    else
+      setListeners(forms[0], settings);
   };
 
 })(document);

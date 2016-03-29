@@ -13,39 +13,9 @@
         <input name="email" type="email" required/>
       </div>
 
-      <!-- <div class="form-group">
-        <select class="" name="" required>
-          <option value="0"></option>
-          <option value="1"></option>
-        </select>
-      </div>
-      <div class="form-group">
-        <select class="" name="" required>
-          <option value="0"></option>
-          <option value="1"></option>
-        </select>
-      </div>
-
-      <div class="form-group">
-        <input type="checkbox" name="name" value="" required>
-      </div>
-
-      <div class="form-group">
-        <input type="radio" name="test" value="1" required>
-        <input type="radio" name="test" value="0">
-      </div>
-
-      <div class="form-group">
-        <input type="week" name="name" value="" required>
-      </div>
-      <div class="form-group">
-      </div> -->
-
       <div class="form-group">
         <input class="form-submit" type="submit" value="Validate"/>
       </div>
-
-
 
       <div class="alert-container">
           <div class="alert alert-warning"></div>
