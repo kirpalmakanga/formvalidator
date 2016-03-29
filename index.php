@@ -13,7 +13,7 @@
         <input name="email" type="email" required/>
       </div>
 
-      <div class="form-group">
+      <!-- <div class="form-group">
         <select class="" name="" required>
           <option value="0"></option>
           <option value="1"></option>
@@ -39,7 +39,7 @@
         <input type="week" name="name" value="" required>
       </div>
       <div class="form-group">
-      </div>
+      </div> -->
 
       <div class="form-group">
         <input class="form-submit" type="submit" value="Validate"/>

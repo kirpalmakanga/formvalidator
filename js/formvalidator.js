@@ -58,7 +58,8 @@
       const action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
       const request = new Request(action, {
         method: 'POST',
-        body: new FormData(form)
+        body: new FormData(form),
+        mode: 'no-cors'
       });
 
       fetch(request)
