@@ -132,7 +132,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
       e.preventDefault();
 
-      if (!errors) callback(settings.beforeSending, settings.form, submitFunc);
+      if (!errors) callback(settings.beforeSending, form, submitFunc);
     });
   }
 

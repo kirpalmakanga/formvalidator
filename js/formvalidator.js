@@ -112,7 +112,7 @@
 
       e.preventDefault();
 
-      if (!errors) callback(settings.beforeSending, settings.form, submitFunc);
+      if (!errors) callback(settings.beforeSending, form, submitFunc);
     });
   }
 
