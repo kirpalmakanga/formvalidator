@@ -6,6 +6,7 @@
     const defaults = {
       form: 'form',
       ajax: false,
+      cors: false,
       onValidation: null,
       beforeSending: null,
       onFormSent: null
@@ -59,7 +60,7 @@
       const request = new Request(action, {
         method: 'POST',
         body: new FormData(form),
-        mode: 'no-cors'
+        mode: settings.cors ? 'cors' : 'no-cors'
       });
 
       fetch(request)

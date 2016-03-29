@@ -9,6 +9,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var defaults = {
       form: 'form',
       ajax: false,
+      cors: false,
       onValidation: null,
       beforeSending: null,
       onFormSent: null
@@ -64,7 +65,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       var request = new Request(action, {
         method: 'POST',
         body: new FormData(form),
-        mode: 'no-cors'
+        mode: settings.cors ? 'cors' : 'no-cors'
       });
 
       fetch(request).then(function (response) {
