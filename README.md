@@ -8,9 +8,12 @@ Javascript plugin for form validation.
 
 ```js
 document.formValidator({
-  form: '.form',
+  selector: '.form',
 
   ajax: true, //enable ajax sending (default is false)
+
+  cors: true,
+
 
   //Triggered before sending form
   beforeSending:function(form) {
