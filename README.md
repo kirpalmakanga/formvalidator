@@ -29,8 +29,9 @@ document.formValidator({
   onValidation: function(inputData) {
 
     /*
-        inputData.input -> the current input element
-        inputData.error -> the input's status (boolean)
+        inputData.form -> current form
+        inputData.input -> current input element
+        inputData.error -> input status (boolean)
     */
 
   },
@@ -39,10 +40,16 @@ document.formValidator({
   onFormSent: function(data) {
 
     /*
-        data.input -> the current form
-        data.response -> the server's response
+        data.form -> current form
+        data.response -> server's response
     */
 
+  },
+  onError: function(data) {
+    /*
+        data.form -> current form
+        data.error -> server error
+    */    
   }
 });
 ```

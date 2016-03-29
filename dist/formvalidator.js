@@ -27,7 +27,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var error = value === '' || value === '0' ? 1 : 0;
 
     callback(settings.onValidation, {
-      form: document.querySelector(settings.selector),
+      form: settings.form,
       input: input,
       error: error
     });
@@ -57,7 +57,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
   }
 
-  function send(form, settings) {
+  function send(settings) {
+    var form = settings.form;
     var action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
     var request = new Request(action, {
       method: 'POST',
@@ -73,14 +74,18 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         response: response
       });
     }).catch(function (error) {
-      callback(settings.onError, error);
+      callback(settings.onError, {
+        form: form,
+        error: error
+      });
     });
   }
 
-  function setListeners(form, settings) {
+  function setListeners(settings) {
+    var form = settings.form;
     var submit = form.querySelector('[type="submit"]');
     var submitFunc = settings.ajax ? function () {
-      return send(form, settings);
+      return send(settings);
     } : function () {
       return form.submit();
     };
@@ -136,7 +141,8 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var forms = [].slice.call(document.querySelectorAll(settings.selector));
 
     forms.map(function (form) {
-      return setListeners(form, settings);
+      settings.form = form;
+      setListeners(settings);
     });
   };
 })(document);
