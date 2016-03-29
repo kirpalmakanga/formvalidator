@@ -18,7 +18,7 @@
   }
 
   document.formValidator({
-    form: '.form',
+    selector: '.form',
     ajax: true, //enable ajax sending (default is false)
     //Triggered after each input validation
     onValidation: function(inputData) {
@@ -28,15 +28,16 @@
       }
     },
 
-    // beforeSending: function(form) {
-    //   return new Promise(function(send, reject) {
-    //     try {
-    //       send();
-    //     } catch(error) {
-    //       console.error('error');
-    //     }
-    //   });
-    // },
+    beforeSending: function(form) {
+      return new Promise(function(resolve, reject) {
+        var test = true;
+        if (test) {
+          resolve();
+        } else {
+          reject();
+        }
+      });
+    },
 
     //Triggered after the form data have been sent
     onFormSent: function(data) {

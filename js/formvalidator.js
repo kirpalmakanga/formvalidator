@@ -4,7 +4,7 @@
   'use strict';
   const createSettings = (options) => {
     const defaults = {
-      form: 'form',
+      selector: 'form',
       ajax: false,
       cors: false,
       onValidation: null,
@@ -24,7 +24,7 @@
     const error = (value === '' || value === '0' ? 1 : 0);
 
     callback(settings.onValidation, {
-      form: document.querySelector(settings.form),
+      form: document.querySelector(settings.selector),
       input: input,
       error: error
     });
@@ -53,27 +53,24 @@
   }
 
   function send(form, settings) {
-
-    callback(settings.beforeSending, form, () => {
-      const action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
-      const request = new Request(action, {
-        method: 'POST',
-        body: new FormData(form),
-        mode: settings.cors ? 'cors' : 'no-cors'
-      });
-
-      fetch(request)
-        .then(response => response.text())
-        .then(response => {
-          callback(settings.onFormSent, {
-            form: form,
-            response: response
-          });
-        })
-        .catch(error => {
-          callback(settings.onError, error);
-        });
+    const action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
+    const request = new Request(action, {
+      method: 'POST',
+      body: new FormData(form),
+      mode: settings.cors ? 'cors' : 'no-cors'
     });
+
+    fetch(request)
+      .then(response => response.text())
+      .then(response => {
+        callback(settings.onFormSent, {
+          form: form,
+          response: response
+        });
+      })
+      .catch(error => {
+        callback(settings.onError, error);
+      });
   }
 
   function setListeners(form, settings) {
@@ -95,14 +92,15 @@
       return string;
     };
 
-    function addEventListeners(element, events, handler) {
+    function addEventListeners({element, events, handler}) {
       events.split(' ').forEach(e => element.addEventListener(e, handler));
     }
 
-    if (inputs.length > 1)
-      inputs.forEach(input => addEventListeners(input, inputEvents(input), () => validate(input, settings)));
-    else
-      addEventListeners(inputs[0], inputEvents(inputs[0]), () => validate(inputs[0], settings));
+    inputs.map(input => addEventListeners({
+      element: input,
+      events: inputEvents(input),
+      handler:() => validate(input, settings)
+    }));
 
     submit.addEventListener('click', e => {
       const errors = inputs.reduce((sum, input) => sum + validate(input, settings), 0);
@@ -115,12 +113,9 @@
 
   document.formValidator = options => {
     const settings = createSettings(options && typeof options === 'object' ? options : {});
-    const forms = [].slice.call(document.querySelectorAll(settings.form));
+    const forms = [].slice.call(document.querySelectorAll(settings.selector));
 
-    if(forms.length > 1)
-      forms.forEach(form => setListeners(form, settings));
-    else
-      setListeners(forms[0], settings);
+    forms.map(form => setListeners(form, settings));
   };
 
 })(document);

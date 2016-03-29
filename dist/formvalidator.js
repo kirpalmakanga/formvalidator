@@ -7,7 +7,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
   var createSettings = function createSettings(options) {
     var defaults = {
-      form: 'form',
+      selector: 'form',
       ajax: false,
       cors: false,
       onValidation: null,
@@ -27,7 +27,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var error = value === '' || value === '0' ? 1 : 0;
 
     callback(settings.onValidation, {
-      form: document.querySelector(settings.form),
+      form: document.querySelector(settings.selector),
       input: input,
       error: error
     });
@@ -58,25 +58,22 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
   }
 
   function send(form, settings) {
+    var action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
+    var request = new Request(action, {
+      method: 'POST',
+      body: new FormData(form),
+      mode: settings.cors ? 'cors' : 'no-cors'
+    });
 
-    callback(settings.beforeSending, form, function () {
-      var action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
-      var request = new Request(action, {
-        method: 'POST',
-        body: new FormData(form),
-        mode: settings.cors ? 'cors' : 'no-cors'
+    fetch(request).then(function (response) {
+      return response.text();
+    }).then(function (response) {
+      callback(settings.onFormSent, {
+        form: form,
+        response: response
       });
-
-      fetch(request).then(function (response) {
-        return response.text();
-      }).then(function (response) {
-        callback(settings.onFormSent, {
-          form: form,
-          response: response
-        });
-      }).catch(function (error) {
-        callback(settings.onError, error);
-      });
+    }).catch(function (error) {
+      callback(settings.onError, error);
     });
   }
 
@@ -103,18 +100,24 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
       return string;
     };
 
-    function addEventListeners(element, events, handler) {
+    function addEventListeners(_ref) {
+      var element = _ref.element;
+      var events = _ref.events;
+      var handler = _ref.handler;
+
       events.split(' ').forEach(function (e) {
         return element.addEventListener(e, handler);
       });
     }
 
-    if (inputs.length > 1) inputs.forEach(function (input) {
-      return addEventListeners(input, inputEvents(input), function () {
-        return validate(input, settings);
+    inputs.map(function (input) {
+      return addEventListeners({
+        element: input,
+        events: inputEvents(input),
+        handler: function handler() {
+          return validate(input, settings);
+        }
       });
-    });else addEventListeners(inputs[0], inputEvents(inputs[0]), function () {
-      return validate(inputs[0], settings);
     });
 
     submit.addEventListener('click', function (e) {
@@ -130,10 +133,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 
   document.formValidator = function (options) {
     var settings = createSettings(options && (typeof options === 'undefined' ? 'undefined' : _typeof(options)) === 'object' ? options : {});
-    var forms = [].slice.call(document.querySelectorAll(settings.form));
+    var forms = [].slice.call(document.querySelectorAll(settings.selector));
 
-    if (forms.length > 1) forms.forEach(function (form) {
+    forms.map(function (form) {
       return setListeners(form, settings);
-    });else setListeners(forms[0], settings);
+    });
   };
 })(document);
