@@ -24,7 +24,7 @@
     const error = (value === '' || value === '0' ? 1 : 0);
 
     callback(settings.onValidation, {
-      form: document.querySelector(settings.selector),
+      form: settings.form,
       input: input,
       error: error
     });
@@ -52,7 +52,8 @@
     }
   }
 
-  function send(form, settings) {
+  function send(settings) {
+    const form = settings.form;
     const action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
     const request = new Request(action, {
       method: 'POST',
@@ -69,13 +70,17 @@
         });
       })
       .catch(error => {
-        callback(settings.onError, error);
+        callback(settings.onError, {
+          form:form,
+          error:error
+        });
       });
   }
 
-  function setListeners(form, settings) {
+  function setListeners(settings) {
+    const form = settings.form;
     const submit = form.querySelector('[type="submit"]');
-    const submitFunc = settings.ajax ? () => send(form, settings) : () => form.submit();
+    const submitFunc = settings.ajax ? () => send(settings) : () => form.submit();
     const inputs = [].slice.call(form.querySelectorAll('[required]'));
     const inputEvents = element => {
       let string = 'blur ';
@@ -107,7 +112,7 @@
 
       e.preventDefault();
 
-      if (!errors) callback(settings.beforeSending, form, submitFunc);
+      if (!errors) callback(settings.beforeSending, settings.form, submitFunc);
     });
   }
 
@@ -115,7 +120,10 @@
     const settings = createSettings(options && typeof options === 'object' ? options : {});
     const forms = [].slice.call(document.querySelectorAll(settings.selector));
 
-    forms.map(form => setListeners(form, settings));
+    forms.map(form => {
+      settings.form = form;
+      setListeners(settings);
+    });
   };
 
 })(document);
