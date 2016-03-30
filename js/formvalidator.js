@@ -19,12 +19,12 @@
     return settings;
   };
 
-  const validate = (input, settings) => {
+  const validate = (input, form, settings) => {
     const value = input.value.trim();
     const error = (value === '' || value === '0' ? 1 : 0);
 
     callback(settings.onValidation, {
-      form: settings.form,
+      form: form,
       input: input,
       error: error
     });
@@ -52,8 +52,7 @@
     }
   }
 
-  function send(settings) {
-    const form = settings.form;
+  function send(form, settings) {
     const action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
     const request = new Request(action, {
       method: 'POST',
@@ -77,10 +76,9 @@
       });
   }
 
-  function setListeners(settings) {
-    const form = settings.form;
+  function setListeners(form, settings) {
     const submit = form.querySelector('[type="submit"]');
-    const submitFunc = settings.ajax ? () => send(settings) : () => form.submit();
+    const submitFunc = settings.ajax ? () => send(form, settings) : () => form.submit();
     const inputs = [].slice.call(form.querySelectorAll('[required]'));
     const inputEvents = element => {
       let string = 'blur ';
@@ -104,11 +102,11 @@
     inputs.map(input => addEventListeners({
       element: input,
       events: inputEvents(input),
-      handler:() => validate(input, settings)
+      handler:() => validate(input, form, settings)
     }));
 
     submit.addEventListener('click', e => {
-      const errors = inputs.reduce((sum, input) => sum + validate(input, settings), 0);
+      const errors = inputs.reduce((sum, input) => sum + validate(input, form, settings), 0);
 
       e.preventDefault();
 
@@ -121,8 +119,7 @@
     const forms = [].slice.call(document.querySelectorAll(settings.selector));
 
     forms.map(form => {
-      settings.form = form;
-      setListeners(settings);
+      setListeners(form, settings);
     });
   };
 
