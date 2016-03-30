@@ -22,12 +22,12 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }return settings;
   };
 
-  var validate = function validate(input, settings) {
+  var validate = function validate(input, form, settings) {
     var value = input.value.trim();
     var error = value === '' || value === '0' ? 1 : 0;
 
     callback(settings.onValidation, {
-      form: settings.form,
+      form: form,
       input: input,
       error: error
     });
@@ -57,8 +57,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     }
   }
 
-  function send(settings) {
-    var form = settings.form;
+  function send(form, settings) {
     var action = form.getAttribute('data-form-action') ? form.getAttribute('data-form-action') : form.getAttribute('action');
     var request = new Request(action, {
       method: 'POST',
@@ -81,11 +80,10 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     });
   }
 
-  function setListeners(settings) {
-    var form = settings.form;
+  function setListeners(form, settings) {
     var submit = form.querySelector('[type="submit"]');
     var submitFunc = settings.ajax ? function () {
-      return send(settings);
+      return send(form, settings);
     } : function () {
       return form.submit();
     };
@@ -120,14 +118,14 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         element: input,
         events: inputEvents(input),
         handler: function handler() {
-          return validate(input, settings);
+          return validate(input, form, settings);
         }
       });
     });
 
     submit.addEventListener('click', function (e) {
       var errors = inputs.reduce(function (sum, input) {
-        return sum + validate(input, settings);
+        return sum + validate(input, form, settings);
       }, 0);
 
       e.preventDefault();
@@ -141,8 +139,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
     var forms = [].slice.call(document.querySelectorAll(settings.selector));
 
     forms.map(function (form) {
-      settings.form = form;
-      setListeners(settings);
+      setListeners(form, settings);
     });
   };
 })(document);
