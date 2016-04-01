@@ -5,7 +5,7 @@
     "Kirpal Makanga <makanga.kirpal@gmail.com>"
   ],
   "description": "Javascript plugin for form validation.",
-  "main": "js/formvalidator.js",
+  "main": "dist/formvalidator.js",
   "moduleType": [
     "es6",
     "globals"
